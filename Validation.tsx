@@ -9,13 +9,13 @@ export const formValidation = Yup.object().shape({
   subForm: Yup.object(),
 });
 
-export interface FormValues {
+export type FormValues = {
   name: string;
   subForm: {
     email?: string;
     phone?: string;
   };
-}
+};
 
 export interface FormDetails {
   values: {};

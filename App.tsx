@@ -28,13 +28,19 @@ export default function App() {
     initialValues,
     validationSchema: validation,
     onSubmit: (values) => onSubmit(values),
-    validateOnChange: true,
-    validateOnMount: true,
     validateOnBlur: true,
   });
 
   // Destructure the formik bag
-  const { values, errors, handleChange, handleSubmit, validateForm } = formik;
+  const {
+    values,
+    errors,
+    touched,
+    handleChange,
+    handleSubmit,
+    validateForm,
+    handleBlur,
+  } = formik;
 
   // Any time we dynamically change the validation schema revalidate the
   // form
@@ -58,8 +64,10 @@ export default function App() {
           style={styles.input}
           placeholder="name"
           onChangeText={handleChange("name")}
+          onBlur={handleBlur("name")}
           value={values.name}
           error={errors.name}
+          touched={touched.name}
         />
         <OtherForm
           formik={formik}

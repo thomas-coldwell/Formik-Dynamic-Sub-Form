@@ -20,6 +20,8 @@ const dropDownItems = [
   { label: "Email and Phone", value: "email-and-phone" },
 ];
 
+type FormType = "email-only" | "email-and-phone";
+
 type TypeFields = {
   [key: string]: Fields[];
 };
@@ -31,13 +33,11 @@ const typeFields: TypeFields = {
 
 export default function OtherForm({ formik, onChangeForm }: IOtherFromProps) {
   //
-  const [formType, setFormType] = React.useState<
-    "email-only" | "email-and-phone"
-  >("email-only");
+  const [formType, setFormType] = React.useState<FormType>("email-only");
 
-  const { values, errors, handleChange, setValues, setFieldValue } = formik;
+  const { values, errors, touched, setValues, handleBlur } = formik;
 
-  const handleFormChange = (type: "email-only" | "email-and-phone") => {
+  const handleFormChange = (type: FormType) => {
     // Set required fields
     const fields = typeFields[type];
     setFormType(type);
@@ -101,6 +101,8 @@ export default function OtherForm({ formik, onChangeForm }: IOtherFromProps) {
             }
             value={values.subForm[field]}
             error={errors.subForm && errors.subForm[field]}
+            touched={touched.subForm && touched.subForm[field]}
+            onBlur={handleBlur("subForm." + field)}
           />
         ))}
     </View>

@@ -6,6 +6,7 @@ import { FormDetails, FormValues, isRequired, notRequired } from "./Validation";
 import Input from "./Input";
 import { styles } from "./styles";
 import DropDownPicker from "react-native-dropdown-picker";
+import { Picker } from "@react-native-community/picker";
 
 interface IOtherFromProps {
   formik: FormikProps<FormValues>;
@@ -30,14 +31,16 @@ const typeFields: TypeFields = {
 
 export default function OtherForm({ formik, onChangeForm }: IOtherFromProps) {
   //
-  const [requiredFields, setRequiredFields] = React.useState<Fields[]>([]);
+  const [formType, setFormType] = React.useState<
+    "email-only" | "email-and-phone"
+  >("email-only");
 
   const { values, errors, handleChange, setValues, setFieldValue } = formik;
 
   const handleFormChange = (type: "email-only" | "email-and-phone") => {
     // Set required fields
     const fields = typeFields[type];
-    setRequiredFields(fields);
+    setFormType(type);
     // Create the values object from the array of required fields
     // re-using previously entered values if present
     const formValues = fields.reduce(
@@ -65,32 +68,41 @@ export default function OtherForm({ formik, onChangeForm }: IOtherFromProps) {
     setValues({ ...values, subForm: formValues });
   };
 
+  React.useEffect(() => {
+    // Set up the initial values and validation schema on first render
+    handleFormChange(formType);
+  }, []);
+
   return (
-    <>
-      <DropDownPicker
-        containerStyle={{
+    <View style={styles.subForm}>
+      <Picker
+        selectedValue={formType}
+        style={{
           height: 40,
-          width: 300,
-          marginBottom: 100,
+          width: "100%",
         }}
-        items={dropDownItems}
-        onChangeItem={(item) => handleFormChange(item.value)}
-      />
-      {requiredFields.map((field) => (
-        <Input
-          key={field}
-          style={styles.input}
-          placeholder={field}
-          onChangeText={(text) =>
-            setValues({
-              ...values,
-              subForm: { ...values.subForm, [field]: text },
-            })
-          }
-          value={values.subForm[field]}
-          error={errors.subForm && errors.subForm[field]}
-        />
-      ))}
-    </>
+        onValueChange={(value: any) => handleFormChange(value)}
+      >
+        {dropDownItems.map((item) => (
+          <Picker.Item value={item.value} key={item.value} label={item.label} />
+        ))}
+      </Picker>
+      {!!formType &&
+        typeFields[formType].map((field) => (
+          <Input
+            key={field}
+            style={styles.input}
+            placeholder={field}
+            onChangeText={(text) =>
+              setValues({
+                ...values,
+                subForm: { ...values.subForm, [field]: text },
+              })
+            }
+            value={values.subForm[field]}
+            error={errors.subForm && errors.subForm[field]}
+          />
+        ))}
+    </View>
   );
 }

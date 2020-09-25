@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Text, View, Button } from "react-native";
+import { Text, View, Button, ScrollView } from "react-native";
 import { useFormik } from "formik";
 import OtherForm from "./OtherForm";
 import Input from "./Input";
@@ -52,30 +52,34 @@ export default function App() {
   };
 
   return (
-    <View style={styles.container}>
-      <Input
-        style={styles.input}
-        placeholder="name"
-        onChangeText={handleChange("name")}
-        value={values.name}
-        error={errors.name}
-      />
-      <OtherForm
-        formik={formik}
-        onChangeForm={(formDetails: FormDetails) =>
-          handleFormChange(formDetails)
-        }
-      />
-      <Button onPress={handleSubmit as any} title="Submit" />
-      <Text style={styles.output}>
-        {"Initial Values: " + JSON.stringify(initialValues)}
-      </Text>
-      <Text style={styles.output}>
-        {"Live Values: " + JSON.stringify(values)}
-      </Text>
-      <Text style={styles.output}>
-        {"Form Output: " + JSON.stringify(result)}
-      </Text>
-    </View>
+    <ScrollView>
+      <View style={styles.container}>
+        <Input
+          style={styles.input}
+          placeholder="name"
+          onChangeText={handleChange("name")}
+          value={values.name}
+          error={errors.name}
+        />
+        <OtherForm
+          formik={formik}
+          onChangeForm={(formDetails: FormDetails) =>
+            handleFormChange(formDetails)
+          }
+        />
+        <View style={{ width: "100%", marginBottom: 20 }}>
+          <Button onPress={handleSubmit as any} title="Submit" />
+        </View>
+        <Text style={styles.output}>
+          {"Initial Values: " + JSON.stringify(initialValues, null, 2)}
+        </Text>
+        <Text style={styles.output}>
+          {"Live Values: " + JSON.stringify(values, null, 2)}
+        </Text>
+        <Text style={styles.output}>
+          {"Form Output: " + JSON.stringify(result, null, 2)}
+        </Text>
+      </View>
+    </ScrollView>
   );
 }

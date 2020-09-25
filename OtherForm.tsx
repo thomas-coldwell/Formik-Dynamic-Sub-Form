@@ -1,11 +1,10 @@
 import * as React from "react";
-import { Switch, View, Platform } from "react-native";
-import { useFormik, FormikProps, FormikValues } from "formik";
+import { View } from "react-native";
+import { FormikProps } from "formik";
 import * as Yup from "yup";
-import { FormDetails, FormValues, isRequired, notRequired } from "./Validation";
+import { FormDetails, FormValues, isRequired } from "./Validation";
 import Input from "./Input";
 import { styles } from "./styles";
-import DropDownPicker from "react-native-dropdown-picker";
 import { Picker } from "@react-native-community/picker";
 
 interface IOtherFromProps {
@@ -32,13 +31,14 @@ const typeFields: TypeFields = {
 };
 
 export default function OtherForm({ formik, onChangeForm }: IOtherFromProps) {
-  //
+  // Setup the form type state selected from the drop down
   const [formType, setFormType] = React.useState<FormType>("email-only");
 
+  // Unpack the formik bag passed from the parent
   const { values, errors, touched, setValues, handleBlur } = formik;
 
   const handleFormChange = (type: FormType) => {
-    // Set required fields
+    // Set required fields to be displayed
     const fields = typeFields[type];
     setFormType(type);
     // Create the values object from the array of required fields
